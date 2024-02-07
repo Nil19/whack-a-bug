@@ -7,7 +7,7 @@ const timerDisplay = document.getElementById('timer-display');
 
 // Define game state
 let score = 0;
-let timeLeft = 5;
+let timeLeft = 30;
 let bugSpeed = 800;
 let gameOver = false;
 
@@ -18,9 +18,13 @@ function randomBug() {
   const randomNumber = Math.floor(Math.random() * cell.length);
   const cells = cell[randomNumber];
   cells.classList.add('bug');
+
+  setTimeout(() => {
+    cell.classList.remove('bug');
+  }, bugSpeed);
 }
 
-const bugMovement = setInterval(randomBug, 800);
+const bugMovement = setInterval(randomBug, bugSpeed, 800);
 
 function removeBugs() {
   for (let i = 0; i < 9; i++) {
@@ -41,6 +45,14 @@ function countDown() {
 }
 
 const timer = setInterval(countDown, 1000);
-for (let i = 0; i < 9; i++) {
-  const cells = cell[i];
+
+for (let i = 0; i < cell.length; i++) {
+  cell[i].addEventListener('click', () => {
+    if (!gameOver && cell[i].classList.contains('bug')) {
+      cell[i].classList.remove('bug');
+      cell[i].classList.add('splat');
+      score++;
+      scoreDisplay.innerText = score;
+    }
+  });
 }
